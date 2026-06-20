@@ -5,7 +5,7 @@ def generate_stops_kmeans(students_df):
     
     coordinates_df = students_df[["latitude","longitude"]]
     coordinates = coordinates_df.values
-    k=20
+    k=60
     kmeans=KMeans(n_clusters=k , random_state=42)
     kmeans.fit(coordinates)
     labels=kmeans.labels_
