@@ -1,11 +1,92 @@
+"""
+FILE:
+main.py
+
+PURPOSE:
+Run the complete school bus stop generation workflow.
+
+WORKFLOW:
+1. Load student and school input data
+2. Generate pickup stops using a selected algorithm
+3. Create stop assignments for all students
+4. Calculate stop-level statistics
+5. Generate visualization datasets
+6. Display results and create map outputs
+
+INPUT:
+- Student data
+- School data
+
+OUTPUT:
+- stops_df
+- stop_assignments_df
+- visualization map
+- summary statistics
+
+NOTES:
+- This file acts as the project controller
+- Stop generation logic is implemented in the
+  stop_generation module
+- Travel time and distance calculations are
+  implemented in the traveltime_engine module
+- Evaluation metrics are implemented in the
+  evaluation module
+- The selected stop generation algorithm can be
+  swapped without modifying the rest of the workflow
+
+PROJECT:
+School Transportation Planning Platform
+Version 1 (Stop Generation Engine)
+
+CURRENT CONFIGURATION:
+- Stop Generation: DBSCAN (Road Distance)
+- Distance Source: OSRM
+- School: YIPS
+"""
+from evaluation.metrics import(
+    calculate_average_students_per_stop, calculate_max_students_per_stop, calculate_number_of_stops, calculate_walking_distance_metrics
+)
 import pandas as pd
 students_df = pd.read_csv("Inputs/students.csv")
 whichschool = "YIPS"
 school_students_df = students_df[students_df["school_id"]== whichschool]
 
-from stop_generation.kmeans import generate_stops_kmeans
+from stop_generation.dbscan_onroad import generate_stops_dbscan_onroad
 
-stops_df, stop_assignments_df = generate_stops_kmeans(school_students_df)
+stops_df, stop_assignments_df = generate_stops_dbscan_onroad(school_students_df)
+"""METRIC CALCULATION"""
+calculate_walking_distance_metrics(
+    school_students_df,
+    stops_df,
+    stop_assignments_df
+) 
+number_of_stops = (
+    calculate_number_of_stops(stops_df)
+)
+average_students_per_stops = (
+    calculate_average_students_per_stop(stop_assignments_df)
+)
+max_students_per_stop = (
+    calculate_max_students_per_stop(stop_assignments_df)
+)
+print()
+print("---------------------")
+print("METRICS")
+print(
+    f"Number of Stops: "
+    f"{number_of_stops}"
+)
+print(
+    f"Average Students per Stop: "
+    f"{average_students_per_stops:.2f}"
+)
+print(
+    f"Maximum Students per Stop: "
+    f"{max_students_per_stop}"
+)
+print("---------------------")
+print()
+"""VISUALIZATION CALCULATION"""
 student_counts = (
     stop_assignments_df
     .groupby("stop_id")
@@ -22,7 +103,6 @@ assignments_by_demand = stop_assignments_df.merge(
     on="student_id"
 
 )
-# print(assignments_by_demand.head(10))
 total_demand = (
     assignments_by_demand
     .groupby("stop_id")["demand"]
@@ -122,5 +202,4 @@ for _, row in visualization_df.iterrows():
 
 
     m.save("Outputs/stop_generation.html")
-print("map saved")
-print(stops_df["student_count"].describe())
+print("fin")
