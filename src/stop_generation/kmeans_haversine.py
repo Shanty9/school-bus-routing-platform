@@ -55,7 +55,7 @@ Version 1 (Stop Generation Engine)
 import pandas as pd
 import math
 
-target_students_per_stop = 3
+target_students_per_stop = 2
 
 
 from sklearn.cluster import KMeans

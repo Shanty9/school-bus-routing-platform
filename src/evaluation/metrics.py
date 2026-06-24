@@ -205,6 +205,51 @@ def calculate_walking_distance_metrics(
      walking_distances = np.array(
           walking_distances
      )
+     max_index = np.argmax(
+          walking_distances
+     )
+     #max distance investigation
+     print("--------MAX DISTANCE DEBUG------")
+     print(
+          f"StudentRow: {max_index}"
+     )
+     print(
+          f"Distance: "
+          f"{walking_distances[max_index]:.0f} m"
+     )
+     student_row = (
+          student_df.iloc[max_index]
+     )
+     print("Student Row")
+     print(student_row)
+     stop_id = (
+          stop_assignments_df.iloc[max_index]["stop_id"]
+     )
+     print(
+          f"Assigned Stop:"
+          f"{stop_id}"
+     )
+     stop_row = (
+          stops_df[
+               stops_df["stop_id"]
+               == stop_id
+          ].iloc[0]
+     )
+     print("stop")
+     print(stop_row)
+     haversine_distance = (
+          calculate_haversine_distance(
+               student_row["latitude"],
+               student_row["longitude"],
+               stop_row["latitude"],
+               stop_row["longitude"]
+          )
+     )
+     print(
+          f"Haversine Distance: "
+          f"{haversine_distance:.0f} m"
+     )
+     #----------------------------------------------------
      average_distance = (
           walking_distances.mean()
      )
@@ -220,6 +265,12 @@ def calculate_walking_distance_metrics(
      max_distance = (
           walking_distances.max()
      )
+     within_250 = (
+          walking_distances<= 250
+     ).mean()*100
+     within_500 = (
+          walking_distances<= 500
+     ).mean()*100
      print()
      print("------------------------")
      print("ACCESS DISTANCE")
@@ -239,6 +290,14 @@ def calculate_walking_distance_metrics(
           f"Maximum: "
           f"{max_distance:.1f} m"
      )
+     print(
+          f"Within 250m: "
+          f"{within_250:.0f}%"
+     )
+     print(
+          f"Within 500m: "
+          f"{within_500:.0f}%"
+     )
      print("------------------------")
      print()
 
@@ -250,6 +309,10 @@ def calculate_walking_distance_metrics(
      "p95_access_distance":
           p95_distance,
      "max_access_distance":
-          max_distance
+          max_distance,
+     "Within_250m_pct":
+          within_250,
+     "within_500m_pct":
+          within_500
 }
      

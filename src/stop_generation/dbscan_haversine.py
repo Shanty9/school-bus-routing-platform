@@ -77,7 +77,7 @@ def generate_stops_dbscan_haversine(
     )
 
     dbscan = DBSCAN(
-        eps=0.5/6371,
+        eps=0.3/6371,
         min_samples=2,
         metric="haversine"
     )
