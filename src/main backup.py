@@ -51,9 +51,9 @@ students_df = pd.read_csv("Inputs/students.csv")
 whichschool = "YIPS"
 school_students_df = students_df[students_df["school_id"]== whichschool]
 
-from stop_generation.kmeans_haversine import generate_stops_kmeans
+from stop_generation.dbscan_onroad import generate_stops_dbscan_onroad
 
-stops_df, stop_assignments_df = generate_stops_kmeans(school_students_df)
+stops_df, stop_assignments_df = generate_stops_dbscan_onroad(school_students_df)
 """METRIC CALCULATION"""
 calculate_walking_distance_metrics(
     school_students_df,
