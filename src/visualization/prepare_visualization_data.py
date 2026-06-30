@@ -32,7 +32,9 @@ def prepare_visualization_data(
             [
                 "stop_id",
                 "latitude",
-                "longitude"
+                "longitude",
+                "generated_latitude",
+                "generated_longitude"
             ]
         ],
         on="stop_id"
@@ -40,8 +42,10 @@ def prepare_visualization_data(
 
     visualization_df = visualization_df.rename(
         columns={
-            "latitude": "stop_lat",
-            "longitude": "stop_lng"
+            "latitude": "snapped_stop_lat",
+            "longitude": "snapped_stop_lng",
+            "generated_latitude": "generated_stop_lat",
+            "generated_longitude": "generated_stop_lng"
         }
     )
 

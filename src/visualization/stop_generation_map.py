@@ -26,26 +26,43 @@ def create_stop_generation_map(
                 row["student_lng"]
             ],
             radius=2,
-            color="blue",
+            color="red",
             fill=True,
             fill_opacity=0.7
         ).add_to(m)
 
-    # Plot stops
+    # Plot generated stops
+    for _, row in stops_df.iterrows():
+        folium.CircleMarker(
+            location=[
+                row["generated_latitude"],
+                row["generated_longitude"]
+            ],
+            radius=8,
+            color="blue",
+            fill=False,
+            weight=2,
+            popup=(
+                f"{row['stop_id']}<br>"
+                f"Generated Stop"
+            )
+        ).add_to(m)
+
+    #Plot snapped stops
     for _, row in stops_df.iterrows():
         folium.CircleMarker(
             location=[
                 row["latitude"],
                 row["longitude"]
             ],
-            radius=8,
-            color="red",
+            radius=5,
+            color="green",
             fill=True,
-            fill_color="red",
-            fill_opacity=0.1,
-            popup=(
+            fill_color="green",
+            fill_opacity = 1,
+            popup= (
                 f"{row['stop_id']}<br>"
-                f"Students: {row['student_count']}"
+                f"Students:  {row['student_count']}"
             )
         ).add_to(m)
 
@@ -54,7 +71,7 @@ def create_stop_generation_map(
         folium.PolyLine(
             locations=[
                 [row["student_lat"], row["student_lng"]],
-                [row["stop_lat"], row["stop_lng"]]
+                [row["snapped_stop_lat"], row["snapped_stop_lng"]]
             ],
             color="black",
             weight=1,

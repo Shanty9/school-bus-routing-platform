@@ -50,7 +50,7 @@ import pandas as pd
 from evaluation.metrics import(
     calculate_average_students_per_stop, calculate_max_students_per_stop, calculate_number_of_stops, calculate_walking_distance_metrics
 )
-from evaluation.evaluate_stop_generation import evaluate_stop_generation
+from evaluation.evaluate_stops import evaluate_stops
 from stop_generation.dbscan_onroad import generate_stops_dbscan_onroad
 from visualization.stop_generation_map import (
     create_stop_generation_map
@@ -58,11 +58,12 @@ from visualization.stop_generation_map import (
 from file_io.save_outputs import(save_outputs)
 from visualization.prepare_visualization_data import (prepare_visualization_data)
 from outputs.prepare_stop_outputs import (prepare_stop_outputs)
+from stop_placement.stop_placement import (place_stops)
 #================================================================================================================================================
 # LOAD INPUT DATA
 #================================================================================================================================================
 
-students_df = pd.read_csv("Inputs/students_perturbed3.csv")
+students_df = pd.read_csv("Inputs/students_perturbed5.csv")
 whichschool = "YIPS"
 school_students_df = students_df[students_df["school_id"]== whichschool]
 
@@ -72,10 +73,17 @@ school_students_df = students_df[students_df["school_id"]== whichschool]
 
 stops_df, stop_assignments_df = generate_stops_dbscan_onroad(school_students_df)
 
+
+#================================================================================================================================================
+# PLACE STOPS ON ROAD
+#================================================================================================================================================
+stops_df = place_stops(
+    stops_df
+)
 #================================================================================================================================================
 # EVALUATE STOP GENERATION
 #================================================================================================================================================
-evaluate_stop_generation(
+evaluate_stops(
     school_students_df,
     stops_df,
     stop_assignments_df

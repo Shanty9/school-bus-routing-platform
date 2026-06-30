@@ -87,7 +87,7 @@ def generate_stops_dbscan_onroad (
         students_df
     )
     dbscan = DBSCAN(
-        eps = 500,
+        eps = 400,
         min_samples=2,
         metric="precomputed"
     )
