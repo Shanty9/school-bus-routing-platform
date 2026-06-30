@@ -133,7 +133,7 @@ def place_single_stop(
             radius_used = radius
             if radius > 100:
                 print(
-                    f"{stop_row['stop_id']} used {radius_used}m search radius."
+                    f"{stop_row['stop_id']} used {radius_used}m search_radius."
                 )
             break
 
@@ -190,7 +190,10 @@ def place_stops(
     
     stops_df["generated_latitude"] = stops_df["latitude"]
     stops_df["generated_longitude"] = stops_df["longitude"]
-
+    stops_df["snap_distance"] = None
+    stops_df["road_type"] = None
+    stops_df["road_name"] = None
+    stops_df["search_radius"] = None
     
 
     placement_report = []
@@ -209,10 +212,7 @@ def place_stops(
         stops_df.loc[index, "latitude"] = latitude
         stops_df.loc[index, "longitude"] = longitude
 
-        stops_df["snap_distance"] = None
-        stops_df["road_type"] = None
-        stops_df["road_name"] = None
-        stops_df["search_radius"] = None
+        
 
         stops_df.loc[index, "snap_distance"] = (
             best_road["distance"]
@@ -237,7 +237,7 @@ def place_stops(
                 "generated_longitude": stop_row["generated_longitude"],
                 "snapped_latitude": latitude,
                 "snapped_longitude": longitude,
-                "search radius": radius_used,
+                "search_radius": radius_used,
                 "snap_distance": best_road["distance"],
                 "road_type": best_road["highway"],
                 "road_name": best_road["name"]
@@ -247,7 +247,6 @@ def place_stops(
         placement_report
     )
     print()
-    print(placement_report_df.head())
 
     return stops_df
 

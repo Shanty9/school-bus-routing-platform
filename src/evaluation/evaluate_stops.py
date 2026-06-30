@@ -10,7 +10,7 @@ def evaluate_stops(
         stops_df,
         stop_assignment_df
     )
-    print(evaluation_df.head())
+    
     evaluate_student_access(
         evaluation_df
     )
@@ -21,10 +21,10 @@ def evaluate_stops(
 def prepare_evaluation_dataframe(
         school_students_df,
         stops_df,
-        stop_assignements_df
+        stop_assignments_df
 ):
     evaluation_df = (
-        stop_assignements_df.merge(
+        stop_assignments_df.merge(
             school_students_df[
                 [
                     "student_id", "latitude", "longitude"
@@ -57,8 +57,7 @@ def prepare_evaluation_dataframe(
             "generated_longitude": "generated_stop_lng"
         }
     )
-    print("Evaluation DF Columns")
-    print(evaluation_df.columns.tolist())
+
     return evaluation_df
 
 def evaluate_student_access(
@@ -72,6 +71,7 @@ def evaluate_student_access(
             evaluation_df["snapped_stop_lng"],
         )
     )
+    print()
     print("------------------------")
     print("Snapped Access Distance")
     print("------------------------")
@@ -99,4 +99,17 @@ def evaluate_student_access(
 def evaluate_stop_placement(
         stops_df
 ):
-    pass
+    print(
+        f"Average Placement Distance: {stops_df['snap_distance'].mean():.1f} m"
+    )
+    print(
+        f"Median Placement Distance: {stops_df['snap_distance'].median():.1f} m"
+    )
+    print(
+        f"95th Percentile: {stops_df['snap_distance'].quantile(0.95):.1f} m"
+    )
+    print(
+        f"Maximum Placement Distance: {stops_df['snap_distance'].max():.1f} m"
+    )
+    print("---------------")
+    print()
